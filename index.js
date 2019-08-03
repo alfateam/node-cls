@@ -26,10 +26,10 @@ let cls = function(ns) {
 };
 
 cls._stack = stack;
-cls.createContext = createContext;
 cls.create = createContext;
 cls.getContext = getContext;
-cls.exitContext = exitContext;
+cls.get = getContext;
+cls.exit = exitContext;
 cls.debug = false;
 cls.printStack = function() {
 	log(inspect(stack, true, 3));
@@ -100,7 +100,7 @@ function getContext(ns, asyncId, cur = []) {
 	}
 }
 
-function exitContext(ns) {
+async function exitContext(ns) {
 	log('exit Context');
 	let asyncId = ah.executionAsyncId();
 	let context = getContext(ns);
@@ -110,6 +110,7 @@ function exitContext(ns) {
 	if (node && node.contexts[ns] === context)
 		delete node.contexts[ns];
 	exitContextUp(context, ns, asyncId);
+	return Promise.resolve();
 }
 
 function exitContextUp(context, ns, asyncId) {
