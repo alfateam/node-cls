@@ -1,14 +1,10 @@
 {
   "name": "node-cls",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Continuation Local Storage based on async_hooks",
   "main": "index.js",
   "scripts": {
     "test": "eslint ./"
-  },
-  "repository": {
-    "type": "git",
-    "url": "github.com/alfateam/node-cls"
   },
   "keywords": [
     "continuation-local-storage",
@@ -30,5 +26,10 @@
   },
   "devDependencies": {
     "eslint": "^6.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alfateam/node-cls.git"
+  },
+  "homepage": "https://github.com/alfateam/node-cls/blob/master/README.md"
 }
