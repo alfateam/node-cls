@@ -1,5 +1,9 @@
 __Continuation Local Storage__
--------------------------------------  
+------------------------------------- 
+[![npm package][npm-image]][npm-url] 
+[![Build Status][travis-image]][travis-url] 
+<!-- [![Coverage Status][coveralls-image]][coveralls-url]  -->
+<!-- [![Dependencies Status][david-image]][david-url]  -->
 The purpose with this module is to share contexts across async (and sync) calls. Contexts are accessed by keys and can be nested. It is an alternative to the deprecated [domain](https://nodejs.org/docs/latest-v8.x/api/domain.html). It is based on [async_hooks](https://nodejs.org/docs/latest-v8.x/api/async_hooks.html) that were introduced in node 8. Beware that that the async_hooks are still experimental in nodejs.  
 
 __Usage__
@@ -88,3 +92,12 @@ async function main() {
 
 main();
 ```
+
+[npm-image]:https://img.shields.io/npm/v/node-cls.svg
+[npm-url]:http://npmjs.org/package/node-cls
+[travis-image]:https://travis-ci.org/alfateam/node-cls.svg?branch=master
+[travis-url]:https://travis-ci.org/alfateam/node-cls
+[david-image]:https://david-dm.org/alfateam/node-cls/status.svg
+[david-url]:https://david-dm.org/alfateam/node-cls
+[coveralls-image]:https://coveralls.io/repos/github/alfateam/node-cls/badge.svg?branch=master
+[coveralls-url]:https://coveralls.io/github/alfateam/node-cls?branch=master
