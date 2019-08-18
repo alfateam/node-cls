@@ -8,7 +8,7 @@ test('async', async (done) => {
 		context.name = 'George';
 		setTimeout(onTimeout, 300);
 	});
-	
+
 	function onTimeout() {
 		let context = cls.get('myContext');
 		expect(context.name).toBe('George');
