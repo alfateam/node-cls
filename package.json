@@ -4,7 +4,8 @@
   "description": "Continuation Local Storage based on async_hooks",
   "main": "index.js",
   "scripts": {
-    "test": "eslint ./"
+    "test": "eslint ./ && jest",
+    "lint": "eslint ./"
   },
   "keywords": [
     "continuation-local-storage",
@@ -25,7 +26,8 @@
     "node": ">= 8.0.0"
   },
   "devDependencies": {
-    "eslint": "^6.1.0"
+    "eslint": "^6.1.0",
+    "jest": "^24.9.0"
   },
   "repository": {
     "type": "git",
