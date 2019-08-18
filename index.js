@@ -1,24 +1,13 @@
 let fs = require('fs');
 let inspect = require('util').inspect;
 let ah = require('async_hooks');
-
-let versionArray = process.version.replace('v', '').split('.');
-let major = parseInt(versionArray[0]);
-
-if (major < 8) {
-	module.exports = function() {
-		throw new Error('Async_hooks are not supported in node < 8');
-	};
-}
+let major = require('./major');
 
 let stack = {};
 let cls = function(ns) {
-	if (arguments.length === 0)
-		throw new Error('Missing namespace');
-
 	let wrapper = {
 		run: (fn) => {
-			let c = cls.createContext(ns);
+			let c = cls.create(ns);
 			return c.run(fn);
 		}
 	};
