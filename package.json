@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint ./ && jest",
+    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
     "lint": "eslint ./",
     "lint-fix": "eslint ./ --fix"
   },
@@ -27,9 +28,10 @@
     "node": ">= 8.0.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.6",
     "eslint": "^6.1.0",
-    "jest": "^24.9.0",
-    "eslint-plugin-jest": "^22.15.1"
+    "eslint-plugin-jest": "^22.15.1",
+    "jest": "^24.9.0"
   },
   "repository": {
     "type": "git",
