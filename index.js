@@ -1,5 +1,4 @@
 let fs = require('fs');
-let inspect = require('util').inspect;
 let ah = require('async_hooks');
 let major = require('./major');
 
@@ -20,9 +19,7 @@ cls.getContext = getContext;
 cls.get = getContext;
 cls.exit = exitContext;
 cls.debug = false;
-cls.printStack = function() {
-	log(inspect(stack, true, 3));
-};
+
 Object.defineProperty(cls, 'active', {
 	enumerable: true,
 	get: getContext
