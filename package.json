@@ -1,6 +1,6 @@
 {
   "name": "node-cls",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Continuation Local Storage based on async_hooks",
   "main": "index.js",
   "scripts": {
