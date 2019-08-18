@@ -2,14 +2,14 @@ let cls = require('../index');
 let versionArray = process.version.replace('v', '').split('.');
 let major = parseInt(versionArray[0]);
 test('node12 start', async (done) => {
-	if (major < 12)
+	if (major >= 12)
 		await core(done);
 	else {
 		try {
-			core(done);
+			await core(done);
 		}
 		catch (e) {
-			expect(e.error).stringContaing('Async_hooks are not supported');
+			expect(e.message).toBe('start() is not supported in nodejs < v12.0.0');
 			done();
 		}
 	}
