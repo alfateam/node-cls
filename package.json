@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint ./ && jest",
-    "coveralls": "jest --coverage && cat ./tests/coverage/lcov.info | coveralls",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint ./",
     "lint-fix": "eslint ./ --fix"
   },
