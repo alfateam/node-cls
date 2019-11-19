@@ -1,6 +1,12 @@
 let fs = require('fs');
 let ah = require('async_hooks');
 let major = require('./major');
+let NODE_CLS = 'node_cls.d8b58a39';
+
+if (process[NODE_CLS]) {
+	module.exports = process[NODE_CLS];
+	return;
+}
 
 let stack = {};
 let cls = function(ns) {
@@ -12,6 +18,7 @@ let cls = function(ns) {
 	};
 	return wrapper;
 };
+process[NODE_CLS] = cls;
 
 cls._stack = stack;
 cls.create = createContext;
