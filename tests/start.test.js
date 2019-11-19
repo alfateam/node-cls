@@ -7,8 +7,7 @@ test('node12 start', async (done) => {
 	else {
 		try {
 			await core(done);
-		}
-		catch (e) {
+		} catch (e) {
 			expect(e.message).toBe('start() is not supported in nodejs < v12.0.0');
 			done();
 		}

@@ -9,6 +9,5 @@ test('basic async test', async (done) => {
 		let context = cls.getContext('request-context');
 		expect(context.id).toBe(1);
 		done();
-
 	}
 });
