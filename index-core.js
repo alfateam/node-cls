@@ -101,14 +101,13 @@ async function exitContext(ns) {
 function exitContextUp(context, ns, asyncId) {
 	while(stack[asyncId]) {
 		log(`exit ${  asyncId}`);
-		let parentId = stack[asyncId].parent;
-		let parent = stack[parentId];
+		asyncId = stack[asyncId].parent;
+		let parent = stack[asyncId];
 		if (parent) {
 			if (parent.contexts[ns] === context)
 				delete parent.contexts[ns];
 			else if (parent.contexts[ns])
 				return;
-			asyncId = parentId;
 		}
 	}
 }
