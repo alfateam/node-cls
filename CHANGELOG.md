@@ -1,4 +1,6 @@
 ## Release notes
+__1.0.4__  
+No longer using recursion internally. This could potentially lead to "Maximum call stack size exceeded".  
 __1.0.3__  
 Saving node_cls on process.  
 __1.0.2__  

@@ -60,29 +60,28 @@ function createContext(ns) {
 	}
 }
 
-function getAllContexts(asyncId, obj) {
-	obj = obj || {};
-	if (!stack[asyncId])
-		return;
-	for (let ns in stack[asyncId].contexts) {
-		if (!obj[ns]) {
-			obj[ns] = stack[asyncId].contexts[ns];
+function getAllContexts(asyncId) {
+	let obj = {};
+	while(stack[asyncId]) {
+		for (let ns in stack[asyncId].contexts) {
+			if (!obj[ns]) {
+				obj[ns] = stack[asyncId].contexts[ns];
+			}
 		}
+		asyncId = stack[asyncId].parent;
 	}
-	getAllContexts(stack[asyncId].parent, obj);
 	return obj;
 }
 
-function getContext(ns, asyncId, cur = []) {
-	asyncId = asyncId || ah.executionAsyncId();
-	let current = stack[asyncId];
-	if (!current)
-		return;
-	if (current.contexts[ns])
-		return current.contexts[ns];
-	if (current.parent) {
-		cur.push(current.parent);
-		return getContext(ns, current.parent, cur);
+function getContext(ns) {
+	let asyncId = ah.executionAsyncId();
+	while(asyncId) {
+		let current = stack[asyncId];
+		if (!current)
+			return;
+		if (current.contexts[ns])
+			return current.contexts[ns];
+		asyncId = current.parent;
 	}
 }
 
@@ -100,17 +99,17 @@ async function exitContext(ns) {
 }
 
 function exitContextUp(context, ns, asyncId) {
-	if (!stack[asyncId])
-		return;
-	log(`exit ${  asyncId}`);
-	let parentId = stack[asyncId].parent;
-	let parent = stack[parentId];
-	if (parent) {
-		if (parent.contexts[ns] === context)
-			delete parent.contexts[ns];
-		else if (parent.contexts[ns])
-			return;
-		exitContextUp(context, ns, parentId);
+	while(stack[asyncId]) {
+		log(`exit ${  asyncId}`);
+		let parentId = stack[asyncId].parent;
+		let parent = stack[parentId];
+		if (parent) {
+			if (parent.contexts[ns] === context)
+				delete parent.contexts[ns];
+			else if (parent.contexts[ns])
+				return;
+			asyncId = parentId;
+		}
 	}
 }
 
