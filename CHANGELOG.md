@@ -1,5 +1,5 @@
 ## Release notes
-__1.0.4__  
+__1.0.5__  
 Bugfix for start().  
 __1.0.4__  
 No longer using recursion internally. This could potentially lead to "Maximum call stack size exceeded".  
