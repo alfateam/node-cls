@@ -1,4 +1,6 @@
 ## Release notes
+__1.0.6__  
+Refactored and less memory trace and better performance.  
 __1.0.5__  
 Bugfix for start().  
 __1.0.4__  
