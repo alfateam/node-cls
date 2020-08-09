@@ -1,5 +1,6 @@
 let fs = require('fs');
 let ah = require('async_hooks');
+let {AsyncResource} = ah;
 let major = require('./major');
 
 let stack = {};
@@ -43,34 +44,25 @@ function createContext(ns) {
 	return c;
 
 	function run(cb) {
-		return Promise.resolve(1)
-			.then(() => {
-				log(`start context ${  ah.executionAsyncId()}`);
-				stack[ah.executionAsyncId()].contexts[ns] = c;
+		if (cls.debug)
+			log('run');
+		const resource = new AsyncResource('node-cls');
+		return resource.runInAsyncScope(() => {
+			let asyncId = ah.executionAsyncId();
+			let current = stack[asyncId];
+			current.contexts[ns] = c;
+			if (cb)
 				return cb();
-			});
+		});
 	}
 
 	function start() {
 		if (major < 12)
 			throw new Error('start() is not supported in nodejs < v12.0.0');
-		return Promise.resolve(1).then(() => {
+		return Promise.resolve().then(() => {
 			stack[ah.executionAsyncId()].contexts[ns] = c;
 		});
 	}
-}
-
-function getAllContexts(asyncId) {
-	let obj = {};
-	while(stack[asyncId]) {
-		for (let ns in stack[asyncId].contexts) {
-			if (!obj[ns]) {
-				obj[ns] = stack[asyncId].contexts[ns];
-			}
-		}
-		asyncId = stack[asyncId].parent;
-	}
-	return obj;
 }
 
 function getContext(ns) {
@@ -86,7 +78,8 @@ function getContext(ns) {
 }
 
 async function exitContext(ns) {
-	log('exit Context');
+	if (cls.debug)
+		log('exit Context');
 	let asyncId = ah.executionAsyncId();
 	let context = getContext(ns);
 	if (!context)
@@ -100,7 +93,8 @@ async function exitContext(ns) {
 
 function exitContextUp(context, ns, asyncId) {
 	while(stack[asyncId]) {
-		log(`exit ${  asyncId}`);
+		if (cls.debug)
+			log(`exit ${  asyncId}`);
 		asyncId = stack[asyncId].parent;
 		let parent = stack[asyncId];
 		if (parent) {
@@ -118,24 +112,25 @@ let hook = ah.createHook({
 });
 hook.enable();
 
-function init(asyncId, type, triggerId) {
-	let node = { contexts: {} };
-	Object.defineProperty(node, 'id', {
-		enumerable: false,
-		value: asyncId
-	});
-	Object.defineProperty(node, 'parent', {
-		enumerable: false,
-		value: triggerId
-	});
-	Object.defineProperty(node, 'children', {
-		enumerable: false,
-		value: {}
-	});
-	stack[asyncId] = node;
-	if (stack[triggerId]) {
-		stack[triggerId].children[asyncId] = node;
+function newNode(asyncId, triggerId, contexts) {
+	return { contexts, id: asyncId, parent: triggerId};
+}
+
+function init(asyncId, _type, triggerId) {
+	let parent = stack[triggerId];
+	let contexts = {};
+	if (!parent) {
+		if (cls.debug)
+			log('no parent');
+		stack[asyncId] = newNode(asyncId, triggerId, contexts);
 	}
+	else {
+		Object.assign(contexts, parent.contexts);
+		stack[asyncId] = newNode(asyncId, triggerId, contexts);
+	}
+	if (cls.debug)
+		log('init ' + asyncId);
+
 }
 
 function log(str) {
@@ -144,16 +139,13 @@ function log(str) {
 }
 
 function destroy(asyncId) {
-	log(`destroy ${  asyncId}`);
-	if (stack[asyncId]) {
-		let contexts = getAllContexts(asyncId);
-		for (let childId in stack[asyncId].children) {
-			let child = stack[asyncId].children[childId];
-			for (let ns in contexts) {
-				child.contexts[ns] = child.contexts[ns] || contexts[ns];
-			}
-		}
+	if (stack[asyncId])
+		delete stack[asyncId];
+	if (cls.debug) {
+		log(`destroy ${  asyncId} : ${  Object.keys(stack).length}`);
+		log(`keys ${  Object.keys(stack)}`);
 	}
+
 	delete stack[asyncId];
 }
 
