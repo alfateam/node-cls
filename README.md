@@ -5,11 +5,12 @@ __Continuation Local Storage__
 [![Coverage Status][coveralls-image]][coveralls-url] 
 [![Dependencies Status][david-image]][david-url]  
 The purpose with this module is to share contexts across async (and sync) calls. Contexts are accessed by keys and can be nested. It is an alternative to the deprecated [domain](https://nodejs.org/docs/latest-v8.x/api/domain.html). It is based on [async_hooks](https://nodejs.org/docs/latest-v8.x/api/async_hooks.html) that were introduced in node 8. Beware that that the async_hooks are still experimental in nodejs.  
+  
 __To avoid weird behavior with express__
 1. Make sure you require `node-cls` in the first row of your app. Some popular packages use async which breaks CLS.
 1. If you are using `body-parser` and context is getting lost, register it in express before you register `node-cls`'s middleware.  
 
-__Usage__
+__Usage__  
 A typical scenario is when you need to share context in a request handler.  
 ```js
 let http = require('http');
