@@ -1,16 +1,15 @@
-__Continuation Local Storage__
-------------------------------------- 
+# Continuation Local Storage
 [![npm package][npm-image]][npm-url] 
 [![Build Status][travis-image]][travis-url] 
 [![Coverage Status][coveralls-image]][coveralls-url] 
 [![Dependencies Status][david-image]][david-url]  
-The purpose with this module is to share contexts across async (and sync) calls. Contexts are accessed by keys and can be nested. It is an alternative to the deprecated [domain](https://nodejs.org/docs/latest-v8.x/api/domain.html). It is based on [async_hooks](https://nodejs.org/docs/latest-v8.x/api/async_hooks.html) that were introduced in node 8. Beware that that the async_hooks are still experimental in nodejs.  
+The purpose with this module is to share contexts across async (and sync) calls. Contexts are accessed by keys and can be nested. It is an alternative to the deprecated [domain](https://nodejs.org/docs/latest-v8.x/api/domain.html). It is based on [async_hooks](https://nodejs.org/docs/latest-v8.x/api/async_hooks.html) that were introduced in node 8. Beware that async_hooks are still experimental in nodejs.  
   
 __To avoid weird behavior with express__
 1. Make sure you require `node-cls` in the first row of your app. Some popular packages use async which breaks CLS.
 1. If you are using `body-parser` and context is getting lost, register it in express before you register `node-cls`'s middleware.  
 
-__Request handler__  
+### Request handler
 A typical scenario is when you need to share context in a request handler.  
 ```js
 let http = require('http');
@@ -32,7 +31,7 @@ function doWork() {
 
 }
 ```
-__Async calls__  
+### Async calls
 Context is retained in async calls.  
 ```js
 let cls = require('node-cls');
@@ -48,7 +47,7 @@ function onTimeout() {
     console.log(context.name); //George
 }
 ```
-__Nesting__  
+### Nesting
 Contexts can be nested, even on the same key.  
 ```js
 let cls = require('node-cls');
@@ -74,7 +73,7 @@ function onTimeout() {
     console.log(context.name); //John Nested
 }
 ```
-__Symbol as key__  
+### Symbol as key
 If you are a library author, use a Symbol as key to avoid conflicts with other libraries.  
 ```js
 let cls = require('node-cls');
@@ -91,7 +90,7 @@ function onTimeout() {
     console.log(context.name); //George
 }
 ```
-__Await instead of run__  
+### Start vs run
 In node 12 and above you can start a context directly instead of wrapping it in the run function. The start function returns a promise. You can leave the current context by calling exit.  
 ```js
 let cls = require('node-cls');
