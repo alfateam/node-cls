@@ -75,7 +75,7 @@ function onTimeout() {
 }
 ```
 __Symbol as key__  
-If you are a library author, use a Symbol for the key to avoid conflicts with other libraries.  
+If you are a library author, use a Symbol as key to avoid conflicts with other libraries.  
 ```js
 let cls = require('node-cls');
 let key = Symbol();
