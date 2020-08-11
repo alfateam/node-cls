@@ -10,7 +10,7 @@ __To avoid weird behavior with express__
 1. Make sure you require `node-cls` in the first row of your app. Some popular packages use async which breaks CLS.
 1. If you are using `body-parser` and context is getting lost, register it in express before you register `node-cls`'s middleware.  
 
-__Usage__  
+__Request handler__  
 A typical scenario is when you need to share context in a request handler.  
 ```js
 let http = require('http');
@@ -32,6 +32,7 @@ function doWork() {
 
 }
 ```
+__Async calls__  
 Context is retained in async calls.  
 ```js
 let cls = require('node-cls');
@@ -47,6 +48,7 @@ function onTimeout() {
     console.log(context.name); //George
 }
 ```
+__Nesting__  
 Contexts can be nested, even on the same key.  
 ```js
 let cls = require('node-cls');
@@ -72,6 +74,24 @@ function onTimeout() {
     console.log(context.name); //John Nested
 }
 ```
+__Symbol as key__  
+If you are a library author, use a Symbol for the key to avoid conflicts with other libraries.  
+```js
+let cls = require('node-cls');
+let key = Symbol();
+
+let context = cls.create(key);
+context.run(() => {
+    context.name = 'George';
+    setTimeout(onTimeout, 300);
+});
+
+function onTimeout() {
+    let context = cls.get(key);
+    console.log(context.name); //George
+}
+```
+__Await instead of run__  
 In node 12 and above you can start a context directly instead of wrapping it in the run function. The start function returns a promise. You can leave the current context by calling exit.  
 ```js
 let cls = require('node-cls');
