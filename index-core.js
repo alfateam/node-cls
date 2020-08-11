@@ -134,8 +134,7 @@ function init(asyncId, _type, triggerId) {
 }
 
 function log(str) {
-	if (cls.debug)
-		fs.writeSync(1, `${str}\n`);
+	fs.writeSync(1, `${str}\n`);
 }
 
 function destroy(asyncId) {
@@ -145,8 +144,6 @@ function destroy(asyncId) {
 		log(`destroy ${  asyncId} : ${  Object.keys(stack).length}`);
 		log(`keys ${  Object.keys(stack)}`);
 	}
-
-	delete stack[asyncId];
 }
 
 module.exports = cls;
